@@ -56,6 +56,12 @@ matchRouter.post("/", async (req, res) => {
         status: getMatchStatus(startTime, endTime),
       })
       .returning();
+      
+      // push data through the pipe to the ws client
+      // broadcast the match created event to all connected WebSocket clients
+      if(res.app.locals.broadcastMatchCreated) {
+        res.app.locals.broadcastMatchCreated(event);
+      }
 
     // return to front end
     res.status(201).json({ data: event });
